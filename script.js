@@ -165,54 +165,74 @@ document.getElementById("btnExportar").addEventListener("click", () => {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
   let y = 10;
+  const limitePagina = 280; // limite vertical para evitar corte
+
+  // Função para checar se cabe na página, senão cria nova página e reseta y
+  function verificarPagina(alturaNecessaria = 10) {
+    if (y + alturaNecessaria > limitePagina) {
+      doc.addPage();
+      y = 10;
+    }
+  }
 
   function addText(label, value) {
+    verificarPagina(8);
     doc.text(`${label}: ${value}`, 10, y);
     y += 8;
   }
 
+  // Informações pessoais
+  doc.setFont("helvetica", "normal")
   addText("Nome", document.getElementById("nome").value);
   addText("Nascimento", document.getElementById("nascimento").value);
   addText("Idade", document.getElementById("idade").value);
   addText("Peso (kg)", document.getElementById("peso").value);
   addText("Altura (cm)", document.getElementById("altura").value);
   addText("Sexo", document.getElementById("sexo").value);
+  doc.line(10, y, 200, y);
 
-  y += 5;
+  y += 15;
+  verificarPagina(10);
   doc.text("Dobras Cutâneas:", 10, y);
-  y += 5;
+  y += 10;
   dobras.forEach((d, i) => {
+    verificarPagina(10);
     doc.text(`${i + 1}. ${d.nome}: ${d.medida} mm`, 12, y);
-    y += 6;
+    y += 10;
   });
 
-  y += 5;
+  y += 10;
+  verificarPagina(10);
   doc.text("Perímetros:", 10, y);
-  y += 5;
+  y += 10;
   perims.forEach((p, i) => {
+    verificarPagina(10);
     doc.text(`${i + 1}. ${p.nome}: ${p.medida} cm`, 12, y);
-    y += 6;
+    y += 10;
   });
 
   y += 5;
+  verificarPagina(8);
   const percText = document.getElementById("percentualGordura").textContent;
   addText("Resultado", percText);
 
-  y += 5;
+  y += 10;
+  verificarPagina(10);
   doc.text("Avaliação Cardiorrespiratória:", 10, y);
-  y += 6;
+  y += 10;
 
-  
+  verificarPagina(8);
   addText('Teste Realizado', document.getElementById('testeCardio').value);
+  verificarPagina(8);
   addText('Resultado do Teste', document.getElementById('resultadoCardio').value);
 
-
   if (imagemBase64) {
-    y += 10;
     const imgProps = doc.getImageProperties(imagemBase64);
     const pdfWidth = doc.internal.pageSize.getWidth() - 20;
     const ratio = imgProps.width / imgProps.height;
     const imgHeight = pdfWidth / ratio;
+
+    verificarPagina(imgHeight);
     doc.addImage(imagemBase64, "JPEG", 10, y, pdfWidth, imgHeight);
   }
 
