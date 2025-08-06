@@ -201,20 +201,11 @@ document.getElementById("btnExportar").addEventListener("click", () => {
   y += 5;
   doc.text("Avaliação Cardiorrespiratória:", 10, y);
   y += 6;
-  addText("FC Repouso", document.getElementById("fcRepouso").value + " bpm");
-  addText(
-    "PA Sistólica",
-    document.getElementById("paSistolica").value + " mmHg"
-  );
-  addText(
-    "PA Diastólica",
-    document.getElementById("paDiastolica").value + " mmHg"
-  );
-  addText("Teste Realizado", document.getElementById("testeCardio").value);
-  addText(
-    "Resultado do Teste",
-    document.getElementById("resultadoCardio").value
-  );
+
+  
+  addText('Teste Realizado', document.getElementById('testeCardio').value);
+  addText('Resultado do Teste', document.getElementById('resultadoCardio').value);
+
 
   if (imagemBase64) {
     y += 10;
