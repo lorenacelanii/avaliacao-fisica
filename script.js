@@ -233,11 +233,14 @@ document.getElementById("btnExportar").addEventListener("click", () => {
 
   //RESULTADO DE GORDURA CORPORAL
   const percText = document.getElementById("percentualGordura").textContent;
+  const match = percText.match(/(\d+(\.\d+)?%)/);
+  const valorSomente = match ? match[0] : "--";
+
   doc.setFont("Helvetica", "bold");
   doc.text("Resultado", 10, y);
   y += 10;
   doc.setFont("Helvetica", "normal");
-  addText("% de Gordura Corporal", percText);
+  addText("Porcetagem de Gordura Corporal", valorSomente);
 
   y += 5;
   doc.line(10, y, 200, y);
