@@ -165,76 +165,107 @@ document.getElementById("btnExportar").addEventListener("click", () => {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
   let y = 10;
-  const limitePagina = 280; // limite vertical para evitar corte
 
-  // Função para checar se cabe na página, senão cria nova página e reseta y
-  function verificarPagina(alturaNecessaria = 10) {
-    if (y + alturaNecessaria > limitePagina) {
+  function addText(label, value) { 
+    if (y > 270) {   //verifica se já ta na hora de adicionar uma ooutra pagina
       doc.addPage();
       y = 10;
     }
-  }
-
-  function addText(label, value) {
-    verificarPagina(8);
     doc.text(`${label}: ${value}`, 10, y);
-    y += 8;
+    y += 10;
   }
 
-  // Informações pessoais
-  doc.setFont("helvetica", "normal")
+  //INFORMAÇÕES PESSOAIS
+
+  doc.setFont("Helvetica", "bold");  //deixa o titulo como bold 
+  doc.text("Informações Pessoais", 10, y);
+  y += 10;
+  doc.setFont("Helvetica", "normal"); //deixa o texto corrido como normal 
+
   addText("Nome", document.getElementById("nome").value);
   addText("Nascimento", document.getElementById("nascimento").value);
   addText("Idade", document.getElementById("idade").value);
   addText("Peso (kg)", document.getElementById("peso").value);
   addText("Altura (cm)", document.getElementById("altura").value);
   addText("Sexo", document.getElementById("sexo").value);
-  doc.line(10, y, 200, y);
 
-  y += 15;
-  verificarPagina(10);
+  y += 5;
+  doc.line(10, y, 200, y); //separador
+  y += 10;
+
+  //DOBRAS CUTÂNEAS
+  doc.setFont("Helvetica", "bold");  
   doc.text("Dobras Cutâneas:", 10, y);
   y += 10;
+  doc.setFont("Helvetica", "normal"); 
+
   dobras.forEach((d, i) => {
-    verificarPagina(10);
+    if (y > 270) {
+      doc.addPage();
+      y = 10;
+    }
     doc.text(`${i + 1}. ${d.nome}: ${d.medida} mm`, 12, y);
     y += 10;
   });
 
+  y += 5;
+  doc.line(10, y, 200, y);
   y += 10;
-  verificarPagina(10);
+
+  //PERÍMETROS
+  doc.setFont("Helvetica", "bold");
   doc.text("Perímetros:", 10, y);
   y += 10;
+  doc.setFont("Helvetica", "normal");
+
   perims.forEach((p, i) => {
-    verificarPagina(10);
+    if (y > 270) {
+      doc.addPage();
+      y = 10;
+    }
     doc.text(`${i + 1}. ${p.nome}: ${p.medida} cm`, 12, y);
     y += 10;
   });
 
   y += 5;
-  verificarPagina(8);
-  const percText = document.getElementById("percentualGordura").textContent;
-  addText("Resultado", percText);
-
+  doc.line(10, y, 200, y);
   y += 10;
-  verificarPagina(10);
+
+  //RESULTADO DE GORDURA CORPORAL
+  const percText = document.getElementById("percentualGordura").textContent;
+  doc.setFont("Helvetica", "bold");
+  doc.text("Resultado", 10, y);
+  y += 10;
+  doc.setFont("Helvetica", "normal");
+  addText("% de Gordura Corporal", percText);
+
+  y += 5;
+  doc.line(10, y, 200, y);
+  y += 10;
+
+  //AVALIAÇÃO CARDIORRESPIRATÓRIA
+  doc.setFont("Helvetica", "bold");
   doc.text("Avaliação Cardiorrespiratória:", 10, y);
   y += 10;
+  doc.setFont("Helvetica", "normal");
 
-  verificarPagina(8);
-  addText('Teste Realizado', document.getElementById('testeCardio').value);
-  verificarPagina(8);
-  addText('Resultado do Teste', document.getElementById('resultadoCardio').value);
+  addText("Teste Realizado", document.getElementById("testeCardio").value);
+  addText("Resultado do Teste", document.getElementById("resultadoCardio").value);
 
+  //IMAGEM
   if (imagemBase64) {
+    y += 10;
+    if (y > 150) { //deixei menor o range do tamanho minimo pra adicionar uma nova página
+      doc.addPage();
+      y = 10;
+    }
     const imgProps = doc.getImageProperties(imagemBase64);
     const pdfWidth = doc.internal.pageSize.getWidth() - 20;
     const ratio = imgProps.width / imgProps.height;
     const imgHeight = pdfWidth / ratio;
-
-    verificarPagina(imgHeight);
     doc.addImage(imagemBase64, "JPEG", 10, y, pdfWidth, imgHeight);
   }
 
   doc.save("avaliacao-antropometrica.pdf");
 });
+
