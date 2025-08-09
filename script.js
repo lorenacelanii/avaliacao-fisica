@@ -233,7 +233,7 @@ document.getElementById("btnExportar").addEventListener("click", () => {
     const imgHeight = pdfWidth / ratio;
 
     verificarPagina(imgHeight);
-    doc.addImage(imagemBase64, "JPEG", 10, y, pdfWidth, imgHeight);
+    doc.addImage(imagemBase64, "JPEG", 1, y, pdfWidth, imgHeight);
   }
 
   doc.save("avaliacao-antropometrica.pdf");

@@ -1,27 +1,42 @@
 body {
-  font-family: Arial, sans-serif;
+  font-family: "Fredoka", sans-serif; font-weight: 400;
   margin: 30px;
-  background: #f0f0f0;
+  background: #008D36;
 }
 
-h1, h2 {
-  color: #333;
+h2 {
+  font-family: "Fredoka", sans-serif; font-weight: 400;
+  color: #008D36;
+}
+
+h1 {
+  color: #FFFFFF;
+  font-family: "Fredoka", sans-serif; font-weight: 400;
 }
 
 label, select, input, button {
+  color: #008D36;
+  font-family: "Fredoka", sans-serif; font-weight: 400;
   margin: 6px 0;
   display: block;
 }
 
-input, select, button {
+select, button {
   padding: 8px;
   font-size: 16px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
+  border-radius: 8px;
+  border: 1px solid #008D36;
+}
+
+input {
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #008D36;  
 }
 
 button {
-  background: #007BFF;
+  padding: 10px;
+  background: #008D36;
   color: white;
   border: none;
   cursor: pointer;
@@ -29,7 +44,7 @@ button {
 }
 
 button:hover {
-  background: #0056b3;
+  background: #005721;
 }
 
 .editBtn {
@@ -43,13 +58,13 @@ button:hover {
 
 .section {
   background: #fff;
-  padding: 15px;
+  padding: 20px;
   border: 1px solid #ccc;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
 }
 
 #btnExportar {
-  background: green;
+  background: #008D36;
 }
 
 #previewImagens img {
@@ -61,9 +76,9 @@ button:hover {
 }
 
 #idade {
-  width: 80px;
-  background: #e9ecef;
-  border: 1px solid #ccc;
+  width: 100px;
+  background: #fff;
+  border: 1px solid #008D36;
   text-align: center;
   pointer-events: none;
 }
