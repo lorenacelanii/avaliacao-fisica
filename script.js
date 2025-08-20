@@ -35,16 +35,98 @@ nascInput.addEventListener("input", () => {
 
 document.getElementById("formDobras").addEventListener("submit", (e) => {
   e.preventDefault();
+
   const nome = selectDobra.value;
   const medidacm = parseFloat(document.getElementById("medida").value);
-  if (!nome || isNaN(medidacm)) return;
+
+  if (!nome || isNaN(medidacm) || nome === "Todas as dobras preenchidas") return;
+
   const medida = medidacm * 10;
   dobras.push({ nome, medida });
-  removerOpcao(selectDobra, nome);
   atualizarListaDobras();
   calcularGordura();
-  e.target.reset();
+
+  // Remove a opção usada
+  const optionParaRemover = selectDobra.querySelector(`option[value="${nome}"]`);
+  if (optionParaRemover) optionParaRemover.remove();
+
+  // Se ainda tiver opções, seleciona a primeira
+  if (selectDobra.options.length > 0) {
+    selectDobra.selectedIndex = 0;
+  } else {
+    // Adiciona placeholder apenas visual, sem tocar no array
+    const placeholder = document.createElement("option");
+    placeholder.text = "Todas as dobras preenchidas";
+    placeholder.disabled = true;
+    placeholder.classList.add("placeholder");
+    selectDobra.add(placeholder);
+    selectDobra.selectedIndex = 0;
+    selectDobra.disabled = true;
+  }
+
+  // Limpa o input e foca nele
+  document.getElementById("medida").value = "";
+  document.getElementById("medida").focus();
 });
+
+function calcularProtocolo() {
+  const protocolo = document.getElementById("protocolo").value;
+  const idade = parseInt(document.getElementById("idade").value);
+  if (!idade) {
+    alert("Informe a idade corretamente!");
+    return;
+  }
+
+  // Define dobras necessárias pelo protocolo (usando os valores do select)
+  let dobrasNecessarias = [];
+  switch (protocolo) {
+    case "faulkner":
+      dobrasNecessarias = ["triceps", "subescapular", "suprailiaca", "abdominal"];
+      break;
+    case "jp3_homem":
+      dobrasNecessarias = ["peitoral", "abdominal", "coxa"];
+      break;
+    case "jp3_mulher":
+      dobrasNecessarias = ["triceps", "suprailiaca", "coxa"];
+      break;
+    case "jp7":
+      dobrasNecessarias = ["peitoral", "axilar", "triceps", "subescapular", "suprailiaca", "abdominal", "coxa"];
+      break;
+    default:
+      alert("Protocolo inválido!");
+      return;
+  }
+
+  let somaDobras = 0;
+  for (let nomeInterno of dobrasNecessarias) {
+    const dobra = dobras.find(d => d.nome === nomeInterno);
+    if (!dobra) {
+      alert(`Dobra "${nomeInterno}" não preenchida!`);
+      return;
+    }
+    somaDobras += dobra.medida; // já está em cm, se quiser mm multiplica por 10
+  }
+
+  // Calcula densidade
+  let densidade = 0;
+  switch (protocolo) {
+    case "faulkner":
+      densidade = 1.097 - 0.00043499 * somaDobras;
+      break;
+    case "jp3_homem":
+      densidade = 1.10938 - 0.0008267 * somaDobras + 0.0000016 * Math.pow(somaDobras, 2) - 0.0002574 * idade;
+      break;
+    case "jp3_mulher":
+      densidade = 1.0994921 - 0.0009929 * somaDobras + 0.0000023 * Math.pow(somaDobras, 2) - 0.0001392 * idade;
+      break;
+    case "jp7":
+      densidade = 1.112 - 0.00043499 * somaDobras + 0.00000055 * Math.pow(somaDobras, 2) - 0.00028826 * idade;
+      break;
+  }
+
+  const gordura = (495 / densidade - 450).toFixed(2);
+  document.getElementById("resultado").innerText = `Gordura corporal: ${gordura}%`;
+}
 
 document.getElementById("formPerimetros").addEventListener("submit", (e) => {
   e.preventDefault();
